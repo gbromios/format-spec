@@ -3,26 +3,32 @@ format-spec
 
 python-like format strings. Have a contrived example:
 
-    > var Fruit = function(name, count) {
-        this.name = name; this.count = count;
-      };
-    > Fruit.prototype.display = function() {
-        return this.name + (this.count === 1 ? '' : 's');
-      };
-    > "{0} is {1.mood} and has {1.snack.count} {1.snack.display}."
-      .format(
-        "Tony",
-        {
-          snack: new Fruit('Orange', 4),
-          mood: "hungry"
-        }
-      );
-    < "Tony is hungry and has 4 Oranges."
+```javascript
+ > var Fruit = function(name, count) {
+     this.name = name; this.count = count;
+   };
+
+ > Fruit.prototype.display = function() {
+     return this.name + (this.count === 1 ? '' : 's');
+   };
+
+ > "{0} is {1.mood} and has {1.snack.count} {1.snack.display}.".format(
+     "Tony",
+     {
+       snack: new Fruit('Orange', 4),
+       mood: "hungry"
+     }
+   );
+
+ < "Tony is hungry and has 4 Oranges."
+```
 
 or, using the module itself (imported as `format_spec`):
 
-    > format_spec('{} and {}', 'cats', 'dogs');
-    < "cats and dogs"
+```javascript
+ > format_spec('{} and {}', 'cats', 'dogs');
+ < "cats and dogs"
+```
 
 since js lacks keyword arguments, names without a position will look at the
 first argument. so `{val}` and `{.val}` are both equivalent to `{0.val}`.
