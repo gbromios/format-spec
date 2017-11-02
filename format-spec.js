@@ -1,10 +1,13 @@
 ;(function(root, factory){
   'use strict';
   if (typeof define === 'function' && define.amd) {
+    // AMD definition
     define.call(root, factory);
   } else if (typeof exports === 'object') {
-    module.exports = { format_spec: factory() };
+    // CommonJS definition
+    module.exports = factory();
   } else {
+    // vanilla js definition
     root.format_spec = factory();
   }
 
