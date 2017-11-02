@@ -1,6 +1,19 @@
-;(function(){
+;(function(root, factory){
   'use strict';
-  define(function() {
+  if (typeof define === 'function' && define.amd) {
+    define.call(root, factory);
+  } else if (typeof exports === 'object') {
+    module.exports = { format_spec: factory() };
+  } else {
+    root.format_spec = factory();
+  }
+
+}(this, function() {
+  var root = this;
+  // define constants here to avoid fucking up editor's matching-brace function
+  var CCB = '}'
+  var OCB = '{'
+
     var __og_String_prototype_format = {};
 
     var Substitution = function(sub, naturalPos) {
@@ -54,7 +67,6 @@
       }
       var parent;
 
-      //console.log('--', val);
       this.nParts.forEach(function(n){
         parent = val;
         val = val[n];
@@ -103,15 +115,15 @@
 
       var _val = function() {
         return this._fmt.slice(start_pos, i)
-          .replace(/{{/g, '{')
-          .replace(/}}/g, '}');
+          .replace(/{{/g, OCB)
+          .replace(/}}/g, CCB);
       };
 
       while (i < this._len) {
         switch (this._fmt[i]) {
-          case '{':
+          case OCB:
             // start of a substitution or just a literal open-curly?
-            if (this._fmt[i+1] === '{') {
+            if (this._fmt[i+1] === OCB) {
               i += 2; // literal
             } else if (i+1 >= this._len) {
               throw this.getError('hit EOF while opening substitution', i);
@@ -122,13 +134,15 @@
               };
             }
           break;
-          case '}':
+          case CCB:
             // literal close curly?
-            if (this._fmt[i+1] === '}') {
+            if (this._fmt[i+1] === CCB) {
               i += 2;
             } else {
-              throw this.getError('can\'t close a substitution if you\'re not' +
-              'inside of one; use }} for a literal close-curly-brace', i);
+              throw this.getError(
+                'can\'t close a substitution if you\'re not inside of one; use '
+                + CCB + CCB + ' for a literal close-curly-brace', i
+              );
             }
           break;
           default:
@@ -144,14 +158,14 @@
     };
 
     FormatSpecification.prototype.getSubstitution = function(start_pos) {
-      // go until htting a }
+      // go until htting a closing curly brace
       var i = start_pos;
       while (i < this._len) {
         switch (this._fmt[i]) {
-          case '{':
-            throw this.getError("{ is illegal inside a substitution", i);
+          case OCB:
+            throw this.getError(OCB + " is illegal inside a substitution", i);
           break;
-          case '}':
+          case CCB:
             return {
               obj: new Substitution(this._fmt.slice(start_pos, i), this.substitutions++),
               end_pos: i + 1
@@ -176,56 +190,43 @@
     };
 
     FormatSpecification.prototype.debug = function() {
-      //console.log('FormatSpec => "'+this._fmt+'"');
       for (var i = 0; i < this.parts.length; i++) {
         var x = this.parts[i];
-        //console.log(i, x);
       }
     };
 
     FormatSpecification.prototype.getValue = function(args) {
       return this.parts.reduce(function(result, s) {
-        //console.log(s, (s instanceof Substitution));
-        if (s instanceof Substitution) {
-          //console.log(s.getValue(args));
-        }
         return result + ((s instanceof Substitution) ? s.getValue(args) : s);
       }, '');
     };
 
     var format = function() {
-      var spec = new FormatSpecification(this);
-
-      //spec.debug();
-
-      return spec.getValue(arguments);
-      
-
+      return (new FormatSpecification(this)).getValue(arguments);
     };
 
-    var _format = function(formatString) {
+    var format_spec = function(formatString) {
       return format.apply(formatString, Array.prototype.slice.call(arguments, 1));
     }
 
-    _format.unbindGlobal = function(name) {
-      // sorry about ur builtin String prototype :(
+    format_spec.unbindGlobal = function(name) {
+      // sorry about ur builtin String prototype -__-
       name = name || 'format';
-      window.String.prototype[name] = __og_String_prototype_format[name];
+      root.String.prototype[name] = __og_String_prototype_format[name];
       delete __og_String_prototype_format[name];
     };
 
-    _format.bindGlobal = function(name) {
+    format_spec.bindGlobal = function(name) {
       name = name || 'format';
       // dont store the original function twice :I
       if (__og_String_prototype_format === undefined) {
-        __og_String_prototype_format[name] = window.String.prototype[name]
+        __og_String_prototype_format[name] = root.String.prototype[name]
       }
-      window.String.prototype[name] = format;
+      root.String.prototype[name] = format;
     }
 
-    // so we can "foo".format() 
-    _format.bindGlobal();
-    return _format;
+    // so we can call .format() directly on string literals
+    format_spec.bindGlobal();
+    return format_spec;
   
-  });
-  })();
+}));
