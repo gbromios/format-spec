@@ -1,0 +1,22 @@
+{
+  "name": "format-spec",
+  "version": "0.1.1",
+  "description": "python-like format strings with curly braces",
+  "main": "format-spec.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gbromios/format-spec.git"
+  },
+  "keywords": [
+    "format"
+  ],
+  "author": "Steven Collins <cyber.fred@themoonischill.net>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gbromios/format-spec/issues"
+  },
+  "homepage": "https://github.com/gbromios/format-spec"
+}
