@@ -3,6 +3,9 @@
   "version": "0.1.1",
   "description": "python-like format strings with curly braces",
   "main": "format-spec.js",
+  "files": [
+    "format-spec.js"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,7 +14,11 @@
     "url": "git+https://github.com/gbromios/format-spec.git"
   },
   "keywords": [
-    "format"
+    "format",
+    "string",
+    "strings",
+    "interpolate",
+    "interpolation"
   ],
   "author": "Steven Collins <cyber.fred@themoonischill.net>",
   "license": "MIT",
