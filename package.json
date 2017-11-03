@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/gbromios/format-spec",
   "devDependencies": {
+    "expect.js": "^0.3.1",
     "mocha": "^4.0.1"
   }
 }
