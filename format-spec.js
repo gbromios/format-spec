@@ -204,13 +204,12 @@
     }, '');
   };
 
-  var format = function() {
+  var format_spec = function(formatString) {
+    return format_spec._format.apply(formatString, Array.prototype.slice.call(arguments, 1));
+  }
+  format_spec._format = function() {
     return (new FormatSpecification(this)).getValue(arguments);
   };
-
-  var format_spec = function(formatString) {
-    return format.apply(formatString, Array.prototype.slice.call(arguments, 1));
-  }
 
   format_spec.unbindGlobal = function(name) {
     // sorry about ur builtin String prototype -__-
@@ -222,10 +221,10 @@
   format_spec.bindGlobal = function(name) {
     name = name || 'format';
     // dont store the original function twice :I
-    if (__og_String_prototype_format === undefined) {
+    if (__og_String_prototype_format[name] === undefined) {
       __og_String_prototype_format[name] = root.String.prototype[name]
     }
-    root.String.prototype[name] = format;
+    root.String.prototype[name] = format_spec._format;
   }
 
   // so we can call .format() directly on string literals

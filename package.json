@@ -25,5 +25,8 @@
   "bugs": {
     "url": "https://github.com/gbromios/format-spec/issues"
   },
-  "homepage": "https://github.com/gbromios/format-spec"
+  "homepage": "https://github.com/gbromios/format-spec",
+  "devDependencies": {
+    "mocha": "^4.0.1"
+  }
 }
